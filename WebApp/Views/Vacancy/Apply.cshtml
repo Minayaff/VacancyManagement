@@ -1,0 +1,49 @@
+﻿@model VacancyManagement.Domain.Candidate
+@{
+    ViewData["Title"] = "Müraciət Forması";
+    var vacancyId = ViewBag.VacancyId;
+}
+
+<h3>Müraciət Forması</h3>
+
+<form asp-action="Apply" method="post">
+    <input type="hidden" asp-for="VacancyId" value="@vacancyId" />
+
+    <div class="mb-3">
+        <label for="FullName" class="form-label">Ad və Soyad</label>
+        <input asp-for="FullName" id="FullName" class="form-control" placeholder="Ad və Soyad" />
+        <span asp-validation-for="FullName" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label for="Email" class="form-label">E-poçt</label>
+        <input asp-for="Email" id="Email" class="form-control" placeholder="E-poçt" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label for="PhoneNumber" class="form-label">Telefon</label>
+        <input asp-for="PhoneNumber" class="form-control" id="phoneNumber" placeholder="055-928-87-55" />
+        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Göndər</button>
+</form>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success mt-3" role="alert">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+@if (ViewBag.ErrorMessage != null)
+{
+    <div class="alert alert-danger mt-3" role="alert">
+        @ViewBag.ErrorMessage
+    </div>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

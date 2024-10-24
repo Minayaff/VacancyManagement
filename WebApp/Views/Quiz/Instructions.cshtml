@@ -1,0 +1,10 @@
+﻿@{
+    ViewData["Title"] = "Təlimatlar";
+    var vacancyId = ViewBag.VacancyId;
+}
+
+<div class="instructions">
+    <h3>Təlimatlar</h3>
+    <p>Testə başlamaq üzrəsiniz. Hər suala cavab vermək üçün 1 dəqiqə vaxtınız var. Cavab verdikdən sonra növbəti sualı görmək üçün "Növbəti sual" düyməsini sıxın.</p>
+    <a href="/quiz/start/@vacancyId" class="btn btn-primary">Testə başla</a>
+</div>

@@ -1,0 +1,73 @@
+﻿@using VacancyManagement.Application.Grading
+@model List<CandidateResultDto>
+
+<div class="container mt-5">
+    <h2 class="mb-4 text-center">Namizədlərin Siyahısı</h2>
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover table-striped">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Ad və Soyad</th>
+                        <th>Vakansiya</th>
+                        <th scope="col">E-poçt</th>
+                        <th scope="col">Telefon Nömrəsi</th>
+                        <th scope="col">Müraciət Tarixi</th>
+                        <th scope="col">Test Nəticələri (Bal / Faiz)</th>
+                        <th scope="col">CV Görüntüləmə</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var candidate in Model)
+                    {
+                        <tr>
+                            <td>@candidate.FullName</td>
+                            <td>@candidate.VacancyName</td>
+                            <td>@candidate.Email</td>
+                            <td>@candidate.PhoneNumber</td>
+                            <td>@candidate.ApplicationDate.ToShortDateString()</td>
+                            <td>
+                                <span class="badge badge-info">Bal: @candidate.CorrectAnswers / @candidate.TotalQuestions</span><br />
+
+                                <!-- Conditional Color Coding based on percentage -->
+                                @if (candidate.Percentage >= 75)
+                                {
+                                    <span class="badge badge-success">Faiz: @candidate.Percentage% - Uğurlu nəticə</span>
+                                }
+                                else if (candidate.Percentage >= 50)
+                                {
+                                    <span class="badge badge-warning">Faiz: @candidate.Percentage% - Orta nəticə</span>
+                                }
+                                else
+                                {
+                                    <span class="badge badge-danger">Faiz: @candidate.Percentage% - Zəif nəticə</span>
+                                }
+                            </td>
+                            <td>
+                                @if (!string.IsNullOrEmpty(candidate.CVDownloadUrl))
+                                {
+                                    <!-- Download CV using Base64 data -->
+                                    <a href="@candidate.CVDownloadUrl" download="@candidate.CVFileName" class="btn btn-sm btn-success">
+                                        CV-ni Yüklə <i class="fas fa-download"></i>
+                                    </a>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">CV mövcud deyil</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-warning text-center" role="alert">
+            Namizədlər tapılmadı.
+        </div>
+    }
+</div>

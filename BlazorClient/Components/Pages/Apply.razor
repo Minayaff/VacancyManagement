@@ -1,0 +1,89 @@
+﻿@page "/apply-vacancy/{VacancyId:int}"
+
+@inject HttpClient Http
+@using System.Net.Http.Json
+@using System.ComponentModel.DataAnnotations
+
+<h3>Apply for Vacancy</h3>
+
+@if (isSubmitted)
+{
+    <p>Thank you for applying! We will contact you soon.</p>
+}
+else
+{
+    <EditForm Model="candidate" OnValidSubmit="HandleSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div>
+            <label for="FullName">Full Name:</label>
+            <InputText id="FullName" @bind-Value="candidate.FullName" />
+            <ValidationMessage For="() => candidate.FullName" />
+        </div>
+
+        <div>
+            <label for="Email">Email:</label>
+            <InputText id="Email" type="email" @bind-Value="candidate.Email" />
+            <ValidationMessage For="() => candidate.Email" />
+        </div>
+
+        <div>
+            <label for="PhoneNumber">Phone Number:</label>
+            <InputText id="PhoneNumber" type="tel" @bind-Value="candidate.PhoneNumber" />
+            <ValidationMessage For="() => candidate.PhoneNumber" />
+        </div>
+
+        <button type="submit">Submit</button>
+    </EditForm>
+}
+
+@code {
+    [Parameter]
+    public int VacancyId { get; set; }
+
+    private Candidate candidate;
+    private bool isSubmitted = false;
+
+    protected override void OnInitialized()
+    {
+        candidate = new Candidate
+            {
+                VacancyId = VacancyId,
+                ApplicationDate = DateTime.Now
+            };
+    }
+
+    private async Task HandleSubmit()
+    {
+        var response = await Http.PostAsJsonAsync("https://localhost:7298/api/candidates", candidate);
+        if (response.IsSuccessStatusCode)
+        {
+            isSubmitted = true;
+            StateHasChanged();
+        }
+        else
+        {
+            // Handle error (e.g. show error message)
+        }
+    }
+
+    public class Candidate
+    {
+        public int Id { get; set; }
+
+        [Required(ErrorMessage = "Ad və soyad tələb olunur.")]
+        public string FullName { get; set; }
+
+        [Required(ErrorMessage = "E-poçt ünvanı tələb olunur.")]
+        [EmailAddress(ErrorMessage = "Düzgün e-poçt formatı daxil edin.")]
+        public string Email { get; set; }
+
+        [Required(ErrorMessage = "Telefon nömrəsi tələb olunur.")]
+        [Phone(ErrorMessage = "Düzgün telefon formatı daxil edin.")]
+        public string PhoneNumber { get; set; }
+
+        public int VacancyId { get; set; }
+        public DateTime ApplicationDate { get; set; }
+    }
+}

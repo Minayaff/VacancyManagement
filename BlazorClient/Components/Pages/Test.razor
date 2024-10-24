@@ -1,0 +1,92 @@
+﻿@page "/test/{vacancyId:int}"
+@using VacancyManagement.Domain
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+
+<h3>Test Sualları</h3>
+
+@if (questions is null)
+{
+    <p>Test sualları yüklənir...</p>
+}
+else if (currentQuestionIndex < questions.Count)
+{
+    <div>
+        <p>Zaman: @timeLeft saniyə</p>
+        <p>@questions[currentQuestionIndex].Text</p>
+        <div>
+            @foreach (var option in questions[currentQuestionIndex].Options)
+            {
+                <label>
+                    <input type="radio" name="option" @onchange="() => SelectOption(option.Id)" />
+                    @option.Text
+                </label>
+            }
+        </div>
+        <button @onclick="NextQuestion">Növbəti Sual</button>
+    </div>
+}
+else
+{
+    <p>Test tamamlandı!</p>
+}
+
+@code {
+    private List<Question> questions;
+    private int currentQuestionIndex = 0;
+    private int selectedOptionId;
+    private int timeLeft = 60;
+    private System.Threading.Timer timer;
+
+    [Parameter]
+    public int VacancyId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        questions = await Http.GetFromJsonAsync<List<Question>>($"https://localhost:7298/api/questions/{VacancyId}");
+        StartTimer();
+    }
+
+    private void StartTimer()
+    {
+        // Timer-in 1 saniyəlik intervalla işləməsi
+        timer = new System.Threading.Timer(_ =>
+        {
+            if (timeLeft > 0)
+            {
+                timeLeft--;
+                InvokeAsync(StateHasChanged); // UI-nı yeniləmək üçün
+            }
+            else
+            {
+                InvokeAsync(NextQuestion); // Vaxt bitdikdə növbəti suala keçid
+            }
+        }, null, 0, 1000);
+    }
+
+    private void SelectOption(int optionId)
+    {
+        selectedOptionId = optionId;
+    }
+
+    private void NextQuestion()
+    {
+        if (currentQuestionIndex < questions.Count - 1)
+        {
+            currentQuestionIndex++;
+            timeLeft = 60; // Yeni sual üçün 1 dəqiqəlik vaxtı sıfırlayırıq
+        }
+        else
+        {
+            Console.WriteLine("Test tamamlandı!");
+            timer.Dispose(); // Timer-i dayandırmaq
+        }
+
+        StateHasChanged(); // UI-nı yeniləmək
+    }
+
+    public void Dispose()
+    {
+        timer?.Dispose(); // Komponent bağlandıqda timer-i təmizləyin
+    }
+}

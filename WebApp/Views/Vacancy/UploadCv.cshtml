@@ -1,0 +1,22 @@
+﻿<form id="cvUploadForm" asp-action="UploadCv" asp-controller="Vacancy" enctype="multipart/form-data" method="post">
+    @Html.AntiForgeryToken() <!-- Include Anti-forgery token if needed -->
+
+    <input type="hidden" name="CandidateId" value="@ViewBag.CandidateId" />
+
+    <div class="form-group">
+        <label for="cvFile">CV Faylı:</label>
+        <input type="file" id="cvFile" name="file" accept=".pdf,.docx" class="form-control" required />
+        <span id="error-message" style="color:red;"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">CV Yüklə</button>
+
+    @if (ViewBag.ErrorMessage != null)
+    {
+        <div class="alert alert-danger">@ViewBag.ErrorMessage</div>
+    }
+    @if (ViewBag.SuccessMessage != null)
+    {
+        <div class="alert alert-success">@ViewBag.SuccessMessage</div>
+    }
+</form>

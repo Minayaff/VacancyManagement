@@ -1,0 +1,57 @@
+﻿@page "/vacancies"
+@using System.Text.Json
+@using Newtonsoft.Json
+@using VacancyManagement.Application.Vacancies
+@using VacancyManagement.Domain
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+
+<h3>Aktiv Vakansiyalar</h3>
+
+@if (vacancies == null)
+{
+    <p>Yüklenir...</p>
+}
+else if (!vacancies.Any())
+{
+    <p>Aktiv vakansiya yoxdur.</p>
+}
+else
+{
+    <ul>
+        @foreach (var vacancy in vacancies)
+        {
+            <li>
+                <strong>@vacancy.Title</strong>
+                <p>@vacancy.Description</p>
+                <a class="btn btn-primary" href="@($"/apply-vacancy/{vacancy.Id}")">Müraciət Et</a>
+            </li>
+        }
+    </ul>
+}
+
+@code {
+    private List<Vacancy> vacancies;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var json = await Http.GetStringAsync("https://localhost:7298/api/vacancies");
+            var vacancyResponse = System.Text.Json.JsonSerializer.Deserialize<List<Vacancy>>(json, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
+            vacancies = vacancyResponse;
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Error fetching vacancies: {ex.Message}");
+        }
+    }
+
+    private void Apply(int vacancyId)
+    {
+        NavigationManager.NavigateTo($"/apply/{vacancyId}");
+    }
+}
