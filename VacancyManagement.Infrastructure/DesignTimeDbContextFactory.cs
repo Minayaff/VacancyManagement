@@ -14,7 +14,7 @@ namespace VacancyManagement.Infrastructure
         {
             var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
             optionsBuilder.UseSqlServer(
-                "Server=DESKTOP-K3DE853\\SQLEXPRESS;Database=VacancyDatabase;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True");
+                "Server=164.92.136.67; Database=VacancyDb; User Id=sa;Password=MinaStrongPassword123;MultipleActiveResultSets=true;TrustServerCertificate=True");
 
             return new ApplicationDbContext(optionsBuilder.Options);
         }

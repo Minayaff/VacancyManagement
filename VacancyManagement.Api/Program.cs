@@ -8,8 +8,9 @@ using VacancyManagement.Application.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 // Register ApplicationDbContext with SQL Server
+var str = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(str));
 
 // Register MediatR
 builder.Services.AddMediatR(typeof(GetQuestionsQuery).Assembly);
