@@ -40,7 +40,7 @@ namespace VacancyManagement.Areas.Admin.Controllers
         {
             var client = _httpClientFactory.CreateClient();
 
-            var apiUrl = $"https://localhost:7298/api/candidate-answers/candidate-answer-details/{candidateId}";
+            var apiUrl = Config.GetApiUrl("candidate-answers/candidate-answer-details/{candidateId}");
 
             try
             {
