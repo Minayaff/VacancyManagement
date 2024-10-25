@@ -32,7 +32,7 @@ namespace WebApp.Controllers
                 return View("Error");
             }
             var client = _httpClientFactory.CreateClient();
-            string apiUrl = $"https://localhost:7298/api/questions/{vacancyId}";
+            string apiUrl = Config.GetApiUrl($"questions/{vacancyId}");
 
             try
             {
@@ -126,7 +126,7 @@ namespace WebApp.Controllers
             };
 
             var client = _httpClientFactory.CreateClient();
-            var apiUrl = "https://localhost:7298/api/candidate-answers";
+            var apiUrl = Config.GetApiUrl($"candidate-answers");;
 
             try
             {

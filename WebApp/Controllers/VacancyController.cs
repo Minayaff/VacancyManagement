@@ -14,7 +14,7 @@ namespace WebApp.Controllers
         public VacancyController(IHttpClientFactory httpClientFactory)
         {
             _httpClient = httpClientFactory.CreateClient();
-            _httpClient.BaseAddress = new Uri("https://localhost:7298"); 
+            _httpClient.BaseAddress = new Uri(Config.Api); 
         }
 
         // GET: /Vacancy
@@ -49,7 +49,7 @@ namespace WebApp.Controllers
                 return View(model);
             }
 
-            var response = await _httpClient.PostAsJsonAsync("https://localhost:7298/api/candidates", model);
+            var response = await _httpClient.PostAsJsonAsync(Config.GetApiUrl("candidates"), model);
 
             if (response.IsSuccessStatusCode)
             {
@@ -125,7 +125,7 @@ namespace WebApp.Controllers
             try
             {
                 // Send the CV data to the API as JSON
-                var response = await _httpClient.PostAsJsonAsync("https://localhost:7298/api/FileUpload/candidate-cv", command);
+                var response = await _httpClient.PostAsJsonAsync(Config.GetApiUrl("FileUpload/candidate-cv"), command);
 
                 if (response.IsSuccessStatusCode)
                 {

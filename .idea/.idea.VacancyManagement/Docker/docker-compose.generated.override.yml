@@ -1,0 +1,35 @@
+# This is a generated file. Not intended for manual editing.
+version: "3.8"
+services:
+  api:
+    build:
+      context: "/Users/nofel/Desktop/VacancyManagement"
+      dockerfile: "VacancyManagement.Api/Dockerfile"
+      target: "base"
+      args:
+        BUILD_CONFIGURATION: "Debug"
+    command: []
+    entrypoint:
+    - "/opt/rider-debugger/linux-arm64/JetBrains.Debugger.Worker"
+    - "--runtimeconfig"
+    - "/opt/rider-debugger/JetBrains.Debugger.Worker.runtimeconfig.json"
+    - "--mode=server"
+    - "--frontend-port=57100"
+    - "--backend-port=57300"
+    - "--timeout=60"
+    environment:
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+      RIDER_DEBUGGER_LOG_DIR: "/var/opt/rider-debugger"
+      RESHARPER_LOG_CONF: "/etc/opt/rider-debugger/backend-log.xml"
+    image: "api_image:dev"
+    ports:
+    - "127.0.0.1:57006:57100"
+    - "127.0.0.1:57206:57300"
+    volumes:
+    - "/Users/nofel/.nuget/packages:/home/app/.nuget/packages"
+    - "/Users/nofel/Desktop/VacancyManagement/VacancyManagement.Api:/app:rw"
+    - "/Users/nofel/Desktop/VacancyManagement:/src:rw"
+    - "/Users/nofel/.local/share/JetBrains/RiderRemoteDebugger/2024.2.6/LinuxArm64:/opt/rider-debugger"
+    - "/Applications/Rider.app/Contents/bin:/etc/opt/rider-debugger/backend-log.xml"
+    - "/Users/nofel/Library/Logs/JetBrains/Rider2024.2/DebuggerWorker/JetBrains.Debugger.Worker.2024_10_25_14_03_47:/var/opt/rider-debugger:rw"
+    working_dir: "/app"
