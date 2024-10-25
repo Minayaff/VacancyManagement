@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using VacancyManagement.Application.Grading;
 using VacancyManagement.Application.CandidateAnswers;
+using WebApp;
 
 namespace VacancyManagement.Areas.Admin.Controllers
 {
@@ -21,7 +22,7 @@ namespace VacancyManagement.Areas.Admin.Controllers
         public async Task<IActionResult> Index()
         {
             var client = _httpClientFactory.CreateClient();
-            var response = await client.GetAsync("https://localhost:7298/api/grading/list");
+            var response = await client.GetAsync(Config.GetApiUrl("grading/list"));
 
             if (response.IsSuccessStatusCode)
             {
