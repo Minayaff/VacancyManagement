@@ -3,6 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 using VacancyManagement.Application.CandidateAnswers.Commands;
+using VacancyManagement.Application.Grading.Queries;
+using VacancyManagement.Application.Grading;
+using VacancyManagement.Application.CandidateAnswers;
+using VacancyManagement.Application.CandidateAnswers.Queries;
 
 namespace VacancyManagement.Api.Controllers
 {
@@ -29,6 +33,19 @@ namespace VacancyManagement.Api.Controllers
             {
                 return BadRequest(new { message = ex.Message });
             }
+        }
+        [HttpGet("candidate-answer-details/{candidateId}")]
+        public async Task<ActionResult<CandidateAnswerDetailsDto>> GetCandidateAnswerDetails(int candidateId)
+        {
+            var query = new GetCandidateAnswerDetailsQuery { CandidateId = candidateId };
+            var candidateAnswerDetails = await _mediator.Send(query);
+
+            if (candidateAnswerDetails == null)
+            {
+                return NotFound(new { Message = "Candidate not found or no answers available." });
+            }
+
+            return Ok(candidateAnswerDetails);
         }
     }
 }

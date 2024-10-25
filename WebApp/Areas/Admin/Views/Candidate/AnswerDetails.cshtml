@@ -1,0 +1,40 @@
+﻿@model VacancyManagement.Application.CandidateAnswers.CandidateAnswerDetailsDto
+
+@{
+    ViewData["Title"] = "Namizədin Cavab Detalları";
+}
+
+<div class="container mt-5">
+    <h2 class="mb-4">Namizədin Cavab Detalları - @Model.CandidateName</h2>
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Sual</th>
+                <th scope="col">Seçim</th>
+                <th scope="col">Düzgünlük</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var answer in Model.Answers)
+            {
+                <tr>
+                    <td>@answer.QuestionText</td>
+                    <td>@answer.SelectedOptionText</td>
+                    <td>
+                        @if (answer.IsCorrect)
+                        {
+                            <span class="badge badge-success">Düzgün</span>
+                        }
+                        else
+                        {
+                            <span class="badge badge-danger">Səhv</span>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <a href="@Url.Action("Index", "Candidate", new { area = "Admin" })" class="btn btn-primary">Geri Qayıt</a>
+</div>
